@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# auto/config – Konfigurationsskript für Debian Live‑Images
+#
+# Dieses Skript initialisiert das Live‑Build‑System für die gewünschte
+# Architektur. Es setzt die Distribution auf das aktuelle stabile Debian
+# („trixie“, Debian 13) und aktiviert zusätzlich die Archive für
+# „contrib“, „non‑free“ und „non‑free‑firmware“, damit Treiber und
+# proprietäre Firmwarepakete verfügbar sind. Als Ausgabe wird ein
+# ISO‑Hybrid‑Image erzeugt, das sowohl auf optischen Medien als auch
+# auf USB‑Sticks booten kann.
+
+set -e
+
+# Die Zielarchitektur kann über die Umgebung (ARCH) gesetzt werden. Wenn
+# keine Architektur angegeben wird, wird amd64 als Standard verwendet.
+ARCH=${ARCH:-amd64}
+
+# Rufe live-build mit den gewünschten Optionen auf. Die Optionen
+# entsprechen den Empfehlungen aus dem Debian‑Live‑Handbuch【843226263871971†L2105-L2141】.
+lb config \
+  --architectures "${ARCH}" \
+  --distribution trixie \
+  --binary-images iso-hybrid \
+  --archive-areas "main contrib non-free non-free-firmware" \
+  --debian-installer disabled \
+  --firmware-binary yes \
+  --iso-volume "Debian Recovery ${ARCH}" \
+  --linux-flavours generic
