@@ -1,0 +1,39 @@
+name: Build Live ISO
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [amd64, i386]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          # Live‑Build installieren
+          sudo apt-get install -y live-build
+
+      - name: Configure live-build
+        run: |
+          ARCH="${{ matrix.arch }}" ./auto/config
+
+      - name: Build image
+        run: |
+          sudo lb build
+
+      - name: Rename ISO
+        run: |
+          mv "live-image-${{ matrix.arch }}.hybrid.iso" "debian-live-recovery-${{ matrix.arch }}.iso"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: debian-live-recovery-${{ matrix.arch }}.iso
+          path: debian-live-recovery-${{ matrix.arch }}.iso
