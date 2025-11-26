@@ -1,0 +1,48 @@
+# Dieses Paketlisten‑Fragment definiert zusätzliche Software, die in
+# das chroot‑Dateisystem des Live‑Images installiert werden soll.
+# Die Auswahl orientiert sich an den Werkzeugen, die auch in der
+# SystemRescue‑Distribution enthalten sind – darunter GParted,
+# fsarchiver, GNU ddrescue und weitere Dateisystem‑ und
+# Netzwerkanalysewerkzeuge【902333962684394†L45-L57】【902333962684394†L103-L124】.
+
+# Dateisystem‑ und Recovery‑Tools
+gparted
+fsarchiver
+gddrescue      # GNU ddrescue
+testdisk
+photorec
+ntfs-3g
+parted
+lsblk
+lvm2
+cryptsetup
+smartmontools
+lshw
+
+# Speicherdiagnose
+memtest86+
+
+# Synchronisation und Kopieren
+rsync
+
+# Netzwerkanalyse und -diagnose
+net-tools       # enthält ifconfig/netstat
+iputils-ping   # ping
+dnsutils        # nslookup/dig
+openssh-client
+openssh-server
+nmap
+tcpdump
+iperf3
+
+# Komfortwerkzeuge
+mc              # Midnight Commander
+nano
+vim
+htop
+less
+
+# Firmware und Bootloader (inkl. 32‑Bit‑EFI)
+firmware-linux-free
+firmware-linux-nonfree
+grub-efi-ia32-bin
