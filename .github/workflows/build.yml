@@ -37,7 +37,7 @@ jobs:
           mv tmp.iso "$ISO"
 
       - name: Upload ISO artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debian-recovery-${{ matrix.arch }}.iso
           path: debian-recovery-${{ matrix.arch }}.iso
