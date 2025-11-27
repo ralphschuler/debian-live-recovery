@@ -1,14 +1,13 @@
-# Dieses Paketlisten‑Fragment definiert zusätzliche Software, die in
-# das chroot‑Dateisystem des Live‑Images installiert werden soll.
-# Die Auswahl orientiert sich an den Werkzeugen, die auch in der
-# SystemRescue‑Distribution enthalten sind – darunter GParted,
-# fsarchiver, GNU ddrescue und weitere Dateisystem‑ und
-# Netzwerkanalysewerkzeuge【902333962684394†L45-L57】【902333962684394†L103-L124】.
+# This package list defines additional software to be installed into
+# the chroot file system of the live image. The selection is based on
+# the tools shipped with the SystemRescue distribution – including
+# GParted, fsarchiver, GNU ddrescue and other file‑system and network
+# analysis utilities【902333962684394†L45-L57】【902333962684394†L103-L124】.
 
-# Dateisystem‑ und Recovery‑Tools
+# File system and recovery tools
 gparted
 fsarchiver
-gddrescue      # GNU ddrescue
+gddrescue        # GNU ddrescue
 testdisk
 photorec
 ntfs-3g
@@ -19,30 +18,35 @@ cryptsetup
 smartmontools
 lshw
 
-# Speicherdiagnose
+# Storage diagnostics
 memtest86+
 
-# Synchronisation und Kopieren
+# Synchronisation and copying
 rsync
 
-# Netzwerkanalyse und -diagnose
-net-tools       # enthält ifconfig/netstat
-iputils-ping   # ping
-dnsutils        # nslookup/dig
+# Network analysis and diagnostics
+net-tools         # provides ifconfig/netstat
+iputils-ping      # ping
+dnsutils          # nslookup/dig
 openssh-client
 openssh-server
 nmap
 tcpdump
 iperf3
 
-# Komfortwerkzeuge
-mc              # Midnight Commander
+# Comfort tools
+mc                # Midnight Commander
 nano
 vim
 htop
-less
 
-# Firmware und Bootloader (inkl. 32‑Bit‑EFI)
+# Additional file system utilities
+btrfs-progs
+zfsutils-linux
+mdadm
+sleuthkit
+
+# Firmware and bootloader (incl. 32‑bit EFI)
 firmware-linux-free
 firmware-linux-nonfree
 grub-efi-ia32-bin
