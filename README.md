@@ -1,90 +1,65 @@
-# Debian Recovery Live USB
+# Debian Recovery Live USB
 
-Dieses Repository ermöglicht den Bau eines Debian‑Live‑Systems, das als universelles
-Recovery‑ und Administrationswerkzeug dient. Es basiert auf der aktuellen stabilen
-Debian‑Distribution („tr ixie“/Debian 13)【335699653578159†L26-L29】. Durch die Unterstützung der
-Architekturen `amd64` und `i386` lässt sich der Stick auch auf sehr alten Rechnern
-oder in 32‑Bit‑EFI‑Umgebungen einsetzen.
+This repository provides a way to build a customised Debian live system for data recovery and administrative tasks. It targets the current stable Debian release (Trixie, Debian 13)【335699653578159†L26-L29】 and supports both `amd64` and `i386` architectures, ensuring compatibility with very old PCs and 32-bit EFI firmware.
 
-## Inhalt
+## Contents
 
-Das Live‑System enthält verschiedene Tools für Systemrettung, Dateisystem‑Reparaturen
-und Netzwerkanalyse. Zu den wichtigsten Paketen gehören GParted, fsarchiver,
-GNU ddrescue, TestDisk, Photorec, NTFS‑3G, Memtest, rsync, lvm2 und verschiedene
-Netzwerk‑Utilities【902333962684394†L45-L57】【902333962684394†L103-L124】. Weitere nützliche
-Werkzeuge wie `htop`, `mc`, `nano`, `vim` und `smartmontools` sind ebenfalls enthalten.
+The live system includes a curated set of tools for file-system repair, disk imaging and network analysis. Key packages are **GParted**, **fsarchiver**, **GNU ddrescue**, **TestDisk** and **Photorec**, as well as NTFS-3G, `memtest86+`, `rsync`, LVM2 and cryptsetup. For hardware monitoring and convenience it also ships `smartmontools`, `lsblk`, `lshw`, **Midnight Commander** and editors such as `nano` and `vim`. Additional network utilities like `nmap`, `tcpdump` and `iperf3` are included【902333962684394†L45-L57】【902333962684394†L103-L124】.
 
-## Build‑Prozess
+## Build process
 
-Das Build‑System nutzt `live‑build`. Das Skript `auto/config` erzeugt die Konfiguration
-für die angegebene Architektur (standardmäßig `amd64`), setzt die Distribution auf
-`trixie`, aktiviert `iso-hybrid`‑Images und schaltet die Archive für `contrib`,
-`non‑free` und `non‑free‑firmware` frei. Ein Aufruf von `lb build` liest anschließend
-die Konfiguration und erstellt das ISO‑Image【843226263871971†L2105-L2141】【843226263871971†L2143-L2147】.
+The project uses the **live-build** tool. The `auto/config` script sets up a build configuration for the selected architecture (default is `amd64`), activates `contrib`, `non-free` and `non-free-firmware` repositories, and requests ISO-hybrid images. Running `lb build` then produces the ISO image according to this configuration【843226263871971†L2105-L2141】【843226263871971†L2143-L2147】.
 
-### Voraussetzungen
+### Prerequisites
 
-Zum Bauen auf einem Debian‑ oder Ubuntu‑System werden folgende Pakete benötigt:
+On a Debian or Ubuntu host install live-build and optional tools:
 
 ```bash
 sudo apt-get update
-sudo apt-get install live-build
+sudo apt-get install live-build grub-efi-ia32-bin xorriso squashfs-tools
 ```
 
-### Konfiguration und Build
+The additional packages are used to inject a 32-bit EFI bootloader into the final image (see below).
+
+### Using the auto scripts
+
+The recommended way to build images is via the scripts in the `auto` directory【552664018867803†L52-L60】:
 
 ```bash
-# Konfiguration für amd64
-ARCH=amd64 ./auto/config
-sudo lb build
-mv live-image-amd64.hybrid.iso debian-live-recovery-amd64.iso
+# Clean previous builds (removes build artefacts and cached variables)
+./auto/clean
 
-# Konfiguration für i386
+# Configure for amd64 and build
+ARCH=amd64 ./auto/config
+sudo ./auto/build
+
+# Configure for i386 and build
 ARCH=i386 ./auto/config
-sudo lb build
-mv live-image-i386.hybrid.iso debian-live-recovery-i386.iso
+sudo ./auto/build
 ```
 
-Das Ergebnis sind zwei ISO‑Dateien, die jeweils ein Hybridsystem enthalten. Hybrid‑ISOs
-können direkt mittels `cp` auf einen USB‑Stick geschrieben werden. Ersetzen Sie
-`/dev/sdX` durch das richtige Gerät:
+The `auto/build` script wraps `lb build`, writes its log to `build.log` and renames the resulting file to `debian-live-recovery-${ARCH}.iso`. Use `auto/clean` between builds to remove previous configuration and build artefacts.
+
+#### Writing the ISO to a USB stick
+
+Hybrid ISOs can be written directly to a USB stick (replace `/dev/sdX` with the correct device):
 
 ```bash
 sudo cp debian-live-recovery-amd64.iso /dev/sdX && sync
 ```
 
-Der Inhalt des Sticks wird vollständig überschrieben【843226263871971†L1433-L1447】. Um ungenutzten
-Speicherplatz auf dem Stick zu verwenden, kann danach eine zweite Partition mit
-`gparted` oder `parted` angelegt werden【843226263871971†L1451-L1484】.
+All data on the stick will be overwritten【843226263871971†L1433-L1447】. To use unused space on the stick, create a second partition with **GParted** or **parted**【843226263871971†L1451-L1484】.
 
-## Unterstützung für 32‑Bit‑EFI
+## Support for 32-bit EFI
 
-Viele ältere Rechner, insbesondere manche Core 2 Duo‑Macs, besitzen nur einen
-32‑Bit‑EFI‑Bootloader, obwohl sie 64‑Bit‑Kernels ausführen können【863506069576672†L14-L18】. Um das
-64‑Bit‑ISO auf solchen Geräten zu booten, muss die Datei `bootia32.efi` in das
-Verzeichnis `EFI/BOOT` des ISO‑Images kopiert werden【863506069576672†L133-L144】. Diese Datei
-wird durch das Paket `grub-efi-ia32-bin` bereitgestellt. Nach dem Erstellen des
-ISOs können Sie das Image mounten und die Datei einfügen:
+Many older computers, especially some Core 2 Duo Macs, have only a 32-bit EFI bootloader although they can run 64-bit kernels【8635060695767672†L14-L18】. To boot the 64-bit ISO on such devices, copy the file `bootia32.efi` into the `EFI/BOOT` directory of the ISO【8635060695767672†L133-L144】. The package `grub-efi-ia32-bin` provides this file. Our workflow automatically injects it into the AMD64 ISO.
 
-```bash
-sudo apt-get install grub-efi-ia32-bin
-# mount the ISO
-mkdir /mnt/iso
-sudo mount debian-live-recovery-amd64.iso /mnt/iso
-# Kopieren Sie bootia32.efi in EFI/BOOT des ISO (erfordert SquashFS‑Werkzeuge und ISO‑Editor).
-```
+Alternatively, you can place both ISOs on a Ventoy stick. Ventoy automatically selects the appropriate image and allows booting on both 32- and 64-bit systems.
 
-Alternativ können Sie beide ISOs auf einen Ventoy‑Stick legen. Ventoy erkennt
-automatisch das passende Image und ermöglicht das Starten auf 32‑ und
-64‑Bit‑Systemen.
+## Automatic releases
 
-## Automatische Releases
+The `.github/workflows` directory contains a GitHub Actions configuration. On every change to the `main` branch a workflow builds the ISOs for `amd64` and `i386`, injects `bootia32.efi` into the AMD64 image and uploads both as release assets. You can adjust the workflow to create or upload GitHub releases or integrate additional steps.
 
-Im Verzeichnis `.github/workflows` befindet sich eine GitHub‑Actions‑Konfiguration.
-Bei jeder Änderung im `main`‑Branch werden die ISOs für `amd64` und `i386` gebaut
-und als Artefakt bereitgestellt. Sie können die Workflows anpassen, um die ISOs
-auf GitHub‑Releases hochzuladen.
+## License
 
-## Lizenz
-
-Dieses Projekt steht unter der GNU General Public License v3 (oder später).
+This project is licensed under the GNU General Public License v3 or later.
