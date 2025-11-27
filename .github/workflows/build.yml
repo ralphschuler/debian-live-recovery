@@ -1,4 +1,4 @@
-name: Build Live ISO
+name: Build Debian Recovery ISO
 
 on:
   push:
@@ -17,8 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # Live‑Build installieren
-          sudo apt-get install -y live-build
+          sudo apt-get install -y live-build grub-efi-ia32-bin xorriso squashfs-tools
 
       - name: Configure live-build
         run: |
@@ -26,14 +25,19 @@ jobs:
 
       - name: Build image
         run: |
-          sudo lb build
+          ./auto/build
 
-      - name: Rename ISO
+      - name: Embed 32-bit EFI bootloader (amd64 only)
+        if: matrix.arch == 'amd64'
         run: |
-          mv "live-image-${{ matrix.arch }}.hybrid.iso" "debian-live-recovery-${{ matrix.arch }}.iso"
+          ISO="debian-recovery-${{ matrix.arch }}.iso"
+          xorriso -indev "$ISO" -outdev tmp.iso \
+            -map /usr/lib/grub/i386-efi/bootia32.efi /EFI/BOOT/bootia32.efi \
+            -boot_image any replay
+          mv tmp.iso "$ISO"
 
-      - name: Upload artifact
+      - name: Upload ISO artifact
         uses: actions/upload-artifact@v3
         with:
-          name: debian-live-recovery-${{ matrix.arch }}.iso
-          path: debian-live-recovery-${{ matrix.arch }}.iso
+          name: debian-recovery-${{ matrix.arch }}.iso
+          path: debian-recovery-${{ matrix.arch }}.iso
