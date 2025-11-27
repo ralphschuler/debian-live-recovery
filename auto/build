@@ -1,0 +1,15 @@
+#!/bin/sh
+# Build the recovery ISO using live-build and record a build log.
+# According to the Debian Live manual, this script should call lb build and record logs for reproducibility.
+# See: https://debian-live.alioth.debian.org/live-manual/html/live-manual.en.html#auto-scripts
+set -e
+
+# Run live-build and capture output to build.log
+lb build 2>&1 | tee build.log
+
+# Determine architecture (default to amd64) and rename resulting ISO for consistency.
+ARCH="${ARCH:-amd64}"
+ISO="live-image-${ARCH}.hybrid.iso"
+if [ -f "$ISO" ]; then
+    mv "$ISO" "debian-recovery-${ARCH}.iso"
+fi
