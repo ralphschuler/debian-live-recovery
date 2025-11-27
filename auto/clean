@@ -1,0 +1,13 @@
+#!/bin/sh
+# Clean the build environment. Remove previous build artifacts and local configuration variables.
+# Recommended by the Debian Live manual: this script removes the build directory and cached variables so you can re-run live-build without conflicts.
+# See: https://debian-live.alioth.debian.org/live-manual/html/live-manual.en.html#auto-scripts
+set -e
+
+# Remove build output and configuration caches
+lb clean
+
+# Remove old ISO images and logs if present
+rm -f build.log
+rm -f debian-recovery-*.iso
+rm -f live-image-*.hybrid.iso
