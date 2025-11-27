@@ -1,29 +1,28 @@
 #!/bin/sh
 #
-# auto/config – Konfigurationsskript für Debian Live‑Images
+# auto/config – configuration script for Debian live images
 #
-# Dieses Skript initialisiert das Live‑Build‑System für die gewünschte
-# Architektur. Es setzt die Distribution auf das aktuelle stabile Debian
-# („trixie“, Debian 13) und aktiviert zusätzlich die Archive für
-# „contrib“, „non‑free“ und „non‑free‑firmware“, damit Treiber und
-# proprietäre Firmwarepakete verfügbar sind. Als Ausgabe wird ein
-# ISO‑Hybrid‑Image erzeugt, das sowohl auf optischen Medien als auch
-# auf USB‑Sticks booten kann.
-
-set -e
-
-# Die Zielarchitektur kann über die Umgebung (ARCH) gesetzt werden. Wenn
-# keine Architektur angegeben wird, wird amd64 als Standard verwendet.
+# This script initialises the live-build system for the desired
+# architecture. It sets the distribution to the current stable Debian
+# ("trixie", Debian 13) and enables the archives for
+# "contrib", "non-free" and "non-free-firmware" so that drivers and
+# proprietary firmware packages are available. The output will be
+# a hybrid ISO image that can boot both from optical media and
+# USB sticks.
+#
+# The target architecture can be set via the environment variable ARCH.
+# If no architecture is specified, amd64 will be used as default.
+# Set ARCH=i386, ARCH=arm64, etc. to build for other architectures.
 ARCH=${ARCH:-amd64}
 
-# Rufe live-build mit den gewünschten Optionen auf. Die Optionen
-# entsprechen den Empfehlungen aus dem Debian‑Live‑Handbuch【843226263871971†L2105-L2141】.
+# Invoke live-build with recommended options. These options follow the
+# Debian live manual guidelines for creating a custom image【552664018867803†L52-L60】.
 lb config \
-  --architectures "${ARCH}" \
-  --distribution trixie \
-  --binary-images iso-hybrid \
-  --archive-areas "main contrib non-free non-free-firmware" \
-  --debian-installer disabled \
-  --firmware-binary yes \
-  --iso-volume "Debian Recovery ${ARCH}" \
-  --linux-flavours generic
+    --architectures "${ARCH}" \
+    --distribution trixie \
+    --binary-images iso-hybrid \
+    --archive-areas "main contrib non-free non-free-firmware" \
+    --debian-installer disabled \
+    --firmware-binary yes \
+    --iso-volume "Debian Recovery ${ARCH}" \
+    --linux-flavours generic
