@@ -4,11 +4,11 @@ This repository provides a way to build a customised Debian live system for data
 
 ## Contents
 
-The live system includes a curated set of tools for file-system repair, disk imaging and network analysis. Key packages are **GParted**, **fsarchiver**, **GNU ddrescue**, **TestDisk** and **Photorec**, as well as NTFS-3G, `memtest86+`, `rsync`, LVM2 and cryptsetup. For hardware monitoring and convenience it also ships `smartmontools`, `lsblk`, `lshw`, **Midnight Commander** and editors such as `nano` and `vim`. Additional network utilities like `nmap`, `tcpdump` and `iperf3` are included【902333962684394†L45-L57】【902333962684394†L103-L124】.
+The live system includes a curated set of tools for file-system repair, disk imaging and network analysis. Key packages are **GParted**, **fsarchiver**, **GNU ddrescue**, **TestDisk** and **Photorec**, as well as NTFS-3G, `memtest86+`, `rsync`, LVM2 and cryptsetup. For hardware monitoring and convenience it also ships `smartmontools`, `lsblk`, `lshw`, **Midnight Commander** and editors such as `nano` and `vim`. Additional network utilities like `nmap`, `tcpdump` and `iperf3` are included【902333962684394†L45-L57】【902333962684394†L103-L124】., along with extra file system and RAID utilities (`btrfs-progs`, `zfsutils-linux`, `mdadm`) and the forensic suite `sleuthkit`
 
 ## Build process
 
-The project uses the **live-build** tool. The `auto/config` script sets up a build configuration for the selected architecture (default is `amd64`), activates `contrib`, `non-free` and `non-free-firmware` repositories, and requests ISO-hybrid images. Running `lb build` then produces the ISO image according to this configuration【843226263871971†L2105-L2141】【843226263871971†L2143-L2147】.
+The project uses the **live-build** tool. The `auto/config` script sets up a build configuration for the selected architecture (default is `amd64`), activates `contrib`, `non-free` and `non-free-firmware` repositories, and requests ISO-hybrid images. Running `lb build` then produces the ISO image according to this configuration【843226263871971†L2105-L2141】【843226263871971†L2143-L2147】 Use the `auto/build` script to run `lb build` and handle logging and ISO renaming automatically..
 
 ### Prerequisites
 
